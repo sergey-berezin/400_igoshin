@@ -49,16 +49,14 @@ namespace wpf
             get => ImgFolder;
             set
             {
-                if (value != null)
-                {
-                    ImgFolder = value;
-                }
+                ImgFolder = value;
                 OnPropertyChanged();
             }
         } 
         
         public void GetImages()
         {
+            
             string[] filenames = Directory.GetFiles(ImagesFolderPath, "*.png");
             foreach (var str in filenames)
             {
@@ -99,9 +97,11 @@ namespace wpf
                     DistMatrix = mtostr(Distances);
                     SimMatrix = mtostr(Similarities);
                 }
-                IsStartEnabled = true;
             } catch (Exception ex) {
                 MessageBox.Show(ex.Message);
+            } finally {
+                IsStartEnabled = true;
+                Clear();
             }
         }
 
@@ -163,6 +163,14 @@ namespace wpf
         public void Cancel()
         {
             cancellationTokenSource.Cancel();
+        }
+
+        public void Clear()
+        {
+            Images.Clear();
+            CurrentProgress = 0;
+            Distances = null;
+            Similarities = null;
         }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = "")
